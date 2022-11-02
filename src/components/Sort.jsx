@@ -1,26 +1,31 @@
 import React from "react";
 
-const Sort = () => {
+const Sort = ({ activeSortType, handleSetActiveSortType }) => {
   const [isOpenPopup, setIsOpenPopup] = React.useState(false);
-  const [activeSortTypeIndex, setActiveSortTypeIndex] = React.useState(0);
 
-  const sortTypes = ["популярности", "цене", "алфавиту"];
-  const activeSortType = sortTypes[activeSortTypeIndex];
-  const sortPopupBlock = renderSortPopupBlock(sortTypes, activeSortTypeIndex);
+  const sortTypes = [
+    { name: "популярности (возр.)", sortProp: "rating", order: "asc" },
+    { name: "популярности (убыв.)", sortProp: "rating", order: "desc" },
+    { name: "цене (возр.)", sortProp: "price", order: "asc" },
+    { name: "цене (убыв.)", sortProp: "price", order: "desc" },
+    { name: "алфавиту (возр.)", sortProp: "title", order: "asc" },
+    { name: "алфавиту (убыв.)", sortProp: "title", order: "desc" },
+  ];
+  const sortPopupBlock = renderSortPopupBlock(sortTypes, activeSortType);
 
-  const handleSetActiveSortType = (index) => {
-    setActiveSortTypeIndex(index);
+  const handleSelectActiveSortType = (sortType) => {
+    handleSetActiveSortType(sortType);
     setIsOpenPopup((isOpenPopup) => !isOpenPopup);
   };
 
-  function renderSortPopupBlock(arraySortTypes, activeIndex) {
-    const sortTypesList = arraySortTypes.map((item, i) => (
+  function renderSortPopupBlock(arraySortTypes, activeSortType) {
+    const sortTypesList = arraySortTypes.map((currentSortType, i) => (
       <li
         key={i}
-        onClick={() => handleSetActiveSortType(i)}
-        className={activeIndex === i ? "active" : ""}
+        onClick={() => handleSelectActiveSortType(currentSortType)}
+        className={activeSortType.name === currentSortType.name ? "active" : ""}
       >
-        {item}
+        {currentSortType.name}
       </li>
     ));
 
@@ -48,7 +53,7 @@ const Sort = () => {
         </svg>
         <b>Сортировка по:</b>
         <span onClick={() => setIsOpenPopup((isOpenPopup) => !isOpenPopup)}>
-          {activeSortType}
+          {activeSortType.name}
         </span>
       </div>
       {isOpenPopup && sortPopupBlock}

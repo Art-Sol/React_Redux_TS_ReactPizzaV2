@@ -1,8 +1,4 @@
-import React from "react";
-
-const Categories = () => {
-  const [activeIndex, setActiveIndex] = React.useState(0);
-
+const Categories = ({ activeCategoryIndex, handleSetCategoryIndex }) => {
   const categories = [
     "Все",
     "Мясные",
@@ -13,14 +9,14 @@ const Categories = () => {
   ];
   const categoriesMenu = renderCategories(categories);
 
-  function renderCategories(array) {
-    return array.map((item, i) => (
+  function renderCategories(arrayCategories) {
+    return arrayCategories.map((categoryName, i) => (
       <li
         key={i}
-        onClick={() => setActiveIndex(i)}
-        className={activeIndex === i ? "active" : ""}
+        onClick={() => handleSetCategoryIndex(i)}
+        className={activeCategoryIndex === i ? "active" : ""}
       >
-        {item}
+        {categoryName}
       </li>
     ));
   }

@@ -1,6 +1,19 @@
 .header {
   padding: 100px;
   text-align: center;
+
+  @media (max-width: 550px) {
+    padding: 50px;
+  }
+
+  @media (max-width: 400px) {
+    padding: 50px 25px;
+
+    h1 {
+      font-size: 30px;
+    }
+  }
+
   span {
     color: #fe5f1e;
   }
@@ -9,4 +22,8 @@
 .description {
   margin-top: 10px;
   font-size: 22px;
+
+  @media (max-width: 400px) {
+    font-size: 16px;
+  }
 }
