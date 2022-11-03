@@ -9,19 +9,15 @@ import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
 
 const Main = () => {
-  const { activeCategoryIndex } = useSelector((state) => state.filter);
+  const { activeCategoryIndex, activeSortType } = useSelector(
+    (state) => state.filter
+  );
 
   const [pizzas, setPizzas] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [currentPage, setCurrentPage] = React.useState(1);
 
   const { searchValue } = React.useContext(SearchContext);
-
-  const [activeSortType, setActiveSortType] = React.useState({
-    name: "популярности (убыв.)",
-    sortProp: "rating",
-    order: "desc",
-  });
 
   const pizzaBlocks = renderPizzaBlockList(pizzas);
 
@@ -69,18 +65,11 @@ const Main = () => {
     ));
   }
 
-  const handleSetActiveSortType = (sortType) => {
-    setActiveSortType(sortType);
-  };
-
   return (
     <div className="container">
       <div className="content__top">
         <Categories />
-        <Sort
-          activeSortType={activeSortType}
-          handleSetActiveSortType={handleSetActiveSortType}
-        />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{pizzaBlocks}</div>

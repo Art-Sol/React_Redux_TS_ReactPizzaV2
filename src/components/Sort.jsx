@@ -1,20 +1,25 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { changeSortType } from "../redux/slices/filterSlice";
 
-const Sort = ({ activeSortType, handleSetActiveSortType }) => {
+const sortTypes = [
+  { name: "популярности (возр.)", sortProp: "rating", order: "asc" },
+  { name: "популярности (убыв.)", sortProp: "rating", order: "desc" },
+  { name: "цене (возр.)", sortProp: "price", order: "asc" },
+  { name: "цене (убыв.)", sortProp: "price", order: "desc" },
+  { name: "алфавиту (возр.)", sortProp: "title", order: "asc" },
+  { name: "алфавиту (убыв.)", sortProp: "title", order: "desc" },
+];
+
+const Sort = () => {
   const [isOpenPopup, setIsOpenPopup] = React.useState(false);
+  const { activeSortType } = useSelector((state) => state.filter);
+  const dispatch = useDispatch();
 
-  const sortTypes = [
-    { name: "популярности (возр.)", sortProp: "rating", order: "asc" },
-    { name: "популярности (убыв.)", sortProp: "rating", order: "desc" },
-    { name: "цене (возр.)", sortProp: "price", order: "asc" },
-    { name: "цене (убыв.)", sortProp: "price", order: "desc" },
-    { name: "алфавиту (возр.)", sortProp: "title", order: "asc" },
-    { name: "алфавиту (убыв.)", sortProp: "title", order: "desc" },
-  ];
   const sortPopupBlock = renderSortPopupBlock(sortTypes, activeSortType);
 
   const handleSelectActiveSortType = (sortType) => {
-    handleSetActiveSortType(sortType);
+    dispatch(changeSortType(sortType));
     setIsOpenPopup((isOpenPopup) => !isOpenPopup);
   };
 
