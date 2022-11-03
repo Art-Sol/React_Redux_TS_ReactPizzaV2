@@ -1,17 +1,22 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
+import { SearchContext } from "../App";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
 
-const Main = ({ searchValue }) => {
+const Main = () => {
+  const { activeCategoryIndex } = useSelector((state) => state.filter);
+
   const [pizzas, setPizzas] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [currentPage, setCurrentPage] = React.useState(1);
 
-  const [activeCategoryIndex, setActiveCategoryIndex] = React.useState(0);
+  const { searchValue } = React.useContext(SearchContext);
+
   const [activeSortType, setActiveSortType] = React.useState({
     name: "популярности (убыв.)",
     sortProp: "rating",
@@ -38,10 +43,11 @@ const Main = ({ searchValue }) => {
     const sortName = sort.sortProp;
     const orderType = sort.order;
     const searchData = searchValue ? searchValue : "";
+    const limit = 4;
 
     const url = searchData
-      ? `https://63613cd267d3b7a0a6c1cb49.mockapi.io/items?page=1&limit=4&search=${searchData}`
-      : `https://63613cd267d3b7a0a6c1cb49.mockapi.io/items?page=${page}&limit=4&category=${catagoryName}&sortBy=${sortName}&order=${orderType}`;
+      ? `https://63613cd267d3b7a0a6c1cb49.mockapi.io/items?page=${page}&limit=${limit}&search=${searchData}`
+      : `https://63613cd267d3b7a0a6c1cb49.mockapi.io/items?page=${page}&limit=${limit}&category=${catagoryName}&sortBy=${sortName}&order=${orderType}`;
 
     setIsLoading(true);
     fetch(url)
@@ -63,10 +69,6 @@ const Main = ({ searchValue }) => {
     ));
   }
 
-  const handleSetCategoryIndex = (index) => {
-    setActiveCategoryIndex(index);
-  };
-
   const handleSetActiveSortType = (sortType) => {
     setActiveSortType(sortType);
   };
@@ -74,10 +76,7 @@ const Main = ({ searchValue }) => {
   return (
     <div className="container">
       <div className="content__top">
-        <Categories
-          activeCategoryIndex={activeCategoryIndex}
-          handleSetCategoryIndex={handleSetCategoryIndex}
-        />
+        <Categories />
         <Sort
           activeSortType={activeSortType}
           handleSetActiveSortType={handleSetActiveSortType}
