@@ -1,63 +1,107 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import qs from "qs";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { SearchContext } from "../App";
+import { setFilters } from "../redux/slices/filterSlice";
+import { fetchPizzas } from "../redux/slices/pizzasSlice";
+import { sortTypes } from "../components/Sort";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
 import Skeleton from "../components/PizzaBlock/Skeleton";
+import ErrorRequest from "../components/PizzaBlock/ErrorRequest";
 import Pagination from "../components/Pagination";
 
 const Main = () => {
-  const { activeCategoryIndex, activeSortType } = useSelector(
+  const { pizzas, status } = useSelector((state) => state.pizza);
+  const { activeCategoryIndex, activeSortType, currentPage } = useSelector(
     (state) => state.filter
   );
-
-  const [pizzas, setPizzas] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [currentPage, setCurrentPage] = React.useState(1);
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isSearch = React.useRef(false);
+  const isMounted = React.useRef(false);
   const { searchValue } = React.useContext(SearchContext);
 
-  const pizzaBlocks = renderPizzaBlockList(pizzas);
+  const limitItemPerPage = 4;
+  const pizzaBlocks = renderPizzaBlockList(pizzas, limitItemPerPage);
 
   React.useEffect(() => {
-    getHttpRequest(
-      activeCategoryIndex,
-      activeSortType,
-      searchValue,
-      currentPage
-    );
-  }, [activeCategoryIndex, activeSortType, searchValue, currentPage]);
-
-  React.useEffect(() => {
-    window.scrollTo(0, 0);
+    setQueryParamsToFilters();
+    window.scrollTo(0, 0); // eslint-disable-next-line
   }, []);
 
-  function getHttpRequest(category, sort, searchValue, page) {
+  React.useEffect(() => {
+    if (!isSearch.current) {
+      getPizzas(
+        activeCategoryIndex,
+        activeSortType,
+        searchValue,
+        currentPage,
+        limitItemPerPage
+      );
+    }
+    isSearch.current = false;
+
+    if (isMounted.current) {
+      setFilterParamsToQuery(activeCategoryIndex, activeSortType, currentPage);
+    }
+    isMounted.current = true;
+    // eslint-disable-next-line
+  }, [activeCategoryIndex, activeSortType, searchValue, currentPage]);
+
+  function setFilterParamsToQuery(category, sort, page) {
+    const queryString = qs.stringify({
+      category,
+      sort: sort.sortProp,
+      order: sort.order,
+      page,
+    });
+    navigate(`?${queryString}`);
+  }
+
+  function setQueryParamsToFilters() {
+    if (window.location.search) {
+      const queryParams = qs.parse(window.location.search.substring(1));
+      const sort = sortTypes
+        .filter((item) => item.sortProp === queryParams.sort)
+        .find((item) => item.order === queryParams.order);
+      delete queryParams.order;
+
+      const params = { ...queryParams, sort };
+
+      dispatch(setFilters(params));
+      isSearch.current = true;
+    }
+  }
+
+  const getPizzas = async (category, sort, searchValue, page, limit) => {
     const catagoryName = category === 0 ? "" : category;
     const sortName = sort.sortProp;
     const orderType = sort.order;
     const searchData = searchValue ? searchValue : "";
-    const limit = 4;
 
-    const url = searchData
-      ? `https://63613cd267d3b7a0a6c1cb49.mockapi.io/items?page=${page}&limit=${limit}&search=${searchData}`
-      : `https://63613cd267d3b7a0a6c1cb49.mockapi.io/items?page=${page}&limit=${limit}&category=${catagoryName}&sortBy=${sortName}&order=${orderType}`;
+    const params = {
+      catagoryName,
+      sortName,
+      orderType,
+      searchData,
+      page,
+      limit,
+    };
 
-    setIsLoading(true);
-    fetch(url)
-      .then((res) => res.json())
-      .then((json) => {
-        setPizzas(json);
-        setIsLoading(false);
-      })
-      .catch((e) => console.log(e));
-  }
+    dispatch(fetchPizzas(params));
+  };
 
-  function renderPizzaBlockList(arrayPizzasProps) {
-    if (isLoading) {
-      return [...new Array(4)].map((_, i) => <Skeleton key={i} />);
+  function renderPizzaBlockList(arrayPizzasProps, limit) {
+    if (status === "loading") {
+      return [...new Array(limit)].map((_, i) => <Skeleton key={i} />);
+    }
+
+    if (status === "error") {
+      return <ErrorRequest />;
     }
 
     return arrayPizzasProps.map((pizzaProps) => (
@@ -73,7 +117,7 @@ const Main = () => {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{pizzaBlocks}</div>
-      <Pagination handleSetPage={setCurrentPage} />
+      <Pagination />
     </div>
   );
 };

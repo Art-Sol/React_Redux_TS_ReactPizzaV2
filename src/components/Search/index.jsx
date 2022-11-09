@@ -1,23 +1,46 @@
 import React from "react";
+import debounce from "lodash.debounce";
 
 import { SearchContext } from "../../App";
 
 import styles from "./Search.module.scss";
 
 const Search = () => {
-  const { searchValue, setSearchValue } = React.useContext(SearchContext);
+  const [inputValue, setInputValue] = React.useState("");
+  const { setSearchValue } = React.useContext(SearchContext);
+  const inputRef = React.useRef();
+
+  // eslint-disable-next-line
+  const debounceUpdateSearchValue = React.useCallback(
+    debounce((searchValue) => {
+      setSearchValue(searchValue);
+    }, 500),
+    []
+  );
+
+  const handleClearInput = () => {
+    setSearchValue("");
+    setInputValue("");
+    inputRef.current.focus();
+  };
+
+  const handleChangeInputValue = (e) => {
+    setInputValue(e.target.value);
+    debounceUpdateSearchValue(e.target.value);
+  };
 
   return (
     <div className={styles.search}>
       <SvgSearchIcon />
       <input
+        ref={inputRef}
         className={styles.input}
         placeholder="Поиск пиццы..."
         type="text"
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
+        value={inputValue}
+        onChange={(e) => handleChangeInputValue(e)}
       />
-      {searchValue && <SvgClearIcon setSearchValue={setSearchValue} />}
+      {inputValue && <SvgClearIcon handleClearInput={handleClearInput} />}
     </div>
   );
 };
@@ -42,7 +65,7 @@ const SvgSearchIcon = () => {
   );
 };
 
-const SvgClearIcon = ({ setSearchValue }) => {
+const SvgClearIcon = ({ handleClearInput }) => {
   return (
     <svg
       className={styles.clearIcon}
@@ -52,7 +75,7 @@ const SvgClearIcon = ({ setSearchValue }) => {
       viewBox="0 0 512 512"
       width="512px"
       xmlns="http://www.w3.org/2000/svg"
-      onClick={() => setSearchValue("")}
+      onClick={() => handleClearInput()}
     >
       <path d="M437.5,386.6L306.9,256l130.6-130.6c14.1-14.1,14.1-36.8,0-50.9c-14.1-14.1-36.8-14.1-50.9,0L256,205.1L125.4,74.5  c-14.1-14.1-36.8-14.1-50.9,0c-14.1,14.1-14.1,36.8,0,50.9L205.1,256L74.5,386.6c-14.1,14.1-14.1,36.8,0,50.9  c14.1,14.1,36.8,14.1,50.9,0L256,306.9l130.6,130.6c14.1,14.1,36.8,14.1,50.9,0C451.5,423.4,451.5,400.6,437.5,386.6z" />
     </svg>

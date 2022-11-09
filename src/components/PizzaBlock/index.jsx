@@ -1,12 +1,20 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const PizzaBlock = ({ title, price, imageUrl, sizes, types }) => {
+import { addItemToCart } from "../../redux/slices/cartSlice";
+
+const PizzaBlock = ({ id, title, price, imageUrl, sizes, types }) => {
   const [activeSize, setActiveSize] = React.useState(0);
   const [activeType, setActiveType] = React.useState(0);
 
+  const { items } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+
   const pizzaTypeNames = ["тонкое", "традиционное"];
+
   const pizzaSizes = renderPizzaSizesList(sizes);
   const pizzaTypes = renderPizzaTypesList(types, pizzaTypeNames);
+  const addedCount = renderAddedCounterElement(items, id);
 
   function renderPizzaSizesList(arraySizes) {
     return arraySizes.map((item, i) => (
@@ -32,6 +40,30 @@ const PizzaBlock = ({ title, price, imageUrl, sizes, types }) => {
     ));
   }
 
+  function renderAddedCounterElement(cartItems, curItemId) {
+    const findCurItemInCart = cartItems.filter((item) => item.id === curItemId);
+    let count;
+    if (findCurItemInCart.length > 0) {
+      count = findCurItemInCart.reduce((acc, item) => {
+        return acc + item.count;
+      }, 0);
+    }
+
+    return count ? <i>{count}</i> : null;
+  }
+
+  const handleAddPizza = () => {
+    const currentPizza = {
+      id,
+      title,
+      imageUrl,
+      type: pizzaTypeNames[activeType],
+      size: sizes[activeSize],
+      price,
+    };
+    dispatch(addItemToCart(currentPizza));
+  };
+
   return (
     <div className="pizza-block">
       <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
@@ -42,7 +74,10 @@ const PizzaBlock = ({ title, price, imageUrl, sizes, types }) => {
       </div>
       <div className="pizza-block__bottom">
         <div className="pizza-block__price">от {price} ₽</div>
-        <button className="button button--outline button--add">
+        <button
+          onClick={handleAddPizza}
+          className="button button--outline button--add"
+        >
           <svg
             width="12"
             height="12"
@@ -56,7 +91,7 @@ const PizzaBlock = ({ title, price, imageUrl, sizes, types }) => {
             />
           </svg>
           <span>Добавить</span>
-          <i>0</i>
+          {addedCount}
         </button>
       </div>
     </div>

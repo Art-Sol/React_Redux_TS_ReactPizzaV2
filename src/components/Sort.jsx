@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { changeSortType } from "../redux/slices/filterSlice";
 
-const sortTypes = [
+export const sortTypes = [
   { name: "популярности (возр.)", sortProp: "rating", order: "asc" },
   { name: "популярности (убыв.)", sortProp: "rating", order: "desc" },
   { name: "цене (возр.)", sortProp: "price", order: "asc" },
@@ -17,6 +17,21 @@ const Sort = () => {
   const dispatch = useDispatch();
 
   const sortPopupBlock = renderSortPopupBlock(sortTypes, activeSortType);
+  const sortPopupRef = React.useRef();
+
+  React.useEffect(() => {
+    document.body.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.body.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  const handleClickOutside = (event) => {
+    if (!event.path.includes(sortPopupRef.current)) {
+      setIsOpenPopup(false);
+    }
+  };
 
   const handleSelectActiveSortType = (sortType) => {
     dispatch(changeSortType(sortType));
@@ -42,7 +57,7 @@ const Sort = () => {
   }
 
   return (
-    <div className="sort">
+    <div ref={sortPopupRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"
