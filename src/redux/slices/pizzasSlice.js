@@ -38,12 +38,14 @@ const pizzasSlice = createSlice({
       state.pizzas = action.payload;
       state.status = "success";
     },
-    [fetchPizzas.rejected]: (state) => {
+    [fetchPizzas.rejected]: (state, action) => {
       state.status = "error";
       state.pizzas = [];
     },
   },
 });
+
+export const pizzaSelector = (state) => state.pizza;
 
 export const { setPizzas } = pizzasSlice.actions;
 

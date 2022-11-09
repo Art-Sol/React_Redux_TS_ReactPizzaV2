@@ -3,9 +3,8 @@ import qs from "qs";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { SearchContext } from "../App";
-import { setFilters } from "../redux/slices/filterSlice";
-import { fetchPizzas } from "../redux/slices/pizzasSlice";
+import { setFilters, filterSelector } from "../redux/slices/filterSlice";
+import { fetchPizzas, pizzaSelector } from "../redux/slices/pizzasSlice";
 import { sortTypes } from "../components/Sort";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
@@ -15,15 +14,13 @@ import ErrorRequest from "../components/PizzaBlock/ErrorRequest";
 import Pagination from "../components/Pagination";
 
 const Main = () => {
-  const { pizzas, status } = useSelector((state) => state.pizza);
-  const { activeCategoryIndex, activeSortType, currentPage } = useSelector(
-    (state) => state.filter
-  );
+  const { pizzas, status } = useSelector(pizzaSelector);
+  const { activeCategoryIndex, activeSortType, currentPage, searchValue } =
+    useSelector(filterSelector);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
-  const { searchValue } = React.useContext(SearchContext);
 
   const limitItemPerPage = 4;
   const pizzaBlocks = renderPizzaBlockList(pizzas, limitItemPerPage);

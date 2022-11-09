@@ -1,8 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
-import { changeCategoryIndex } from "../redux/slices/filterSlice";
+import {
+  changeCategoryIndex,
+  filterSelector,
+} from "../redux/slices/filterSlice";
 
 const Categories = () => {
-  const { activeCategoryIndex } = useSelector((state) => state.filter);
+  const { activeCategoryIndex } = useSelector(filterSelector);
   const dispatch = useDispatch();
 
   const categories = [
