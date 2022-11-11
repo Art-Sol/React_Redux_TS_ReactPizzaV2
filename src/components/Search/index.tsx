@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactEventHandler } from "react";
 import debounce from "lodash.debounce";
 
 import { useDispatch } from "react-redux";
@@ -25,7 +25,7 @@ const Search = () => {
     inputRef.current?.focus();
   };
 
-  const handleChangeInputValue = (e: any) => {
+  const handleChangeInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
     debounceUpdateSearchValue(e.target.value);
   };
@@ -48,7 +48,7 @@ const Search = () => {
 
 export default Search;
 
-const SvgSearchIcon = () => {
+const SvgSearchIcon: React.FC = () => {
   return (
     <svg
       className={styles.icon}
@@ -66,7 +66,11 @@ const SvgSearchIcon = () => {
   );
 };
 
-const SvgClearIcon = ({ handleClearInput }: any) => {
+type SvgClearIconProps = {
+  handleClearInput: () => void;
+};
+
+const SvgClearIcon: React.FC<SvgClearIconProps> = ({ handleClearInput }) => {
   return (
     <svg
       className={styles.clearIcon}

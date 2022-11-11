@@ -1,7 +1,24 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import _ from "lodash";
 
-const initialState = {
+import { RootState } from "../store";
+
+export type CartItem = {
+  id: string;
+  title: string;
+  imageUrl: string;
+  type: string;
+  size: number;
+  price: number;
+  count?: number;
+};
+
+interface ICartSliceState {
+  items: CartItem[];
+  totalPrice: number;
+}
+
+const initialState: ICartSliceState = {
   items: [],
   totalPrice: 0,
 };
@@ -10,7 +27,7 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addItemToCart(state, action) {
+    addItemToCart(state, action: PayloadAction<CartItem>) {
       const currentItem = action.payload;
 
       const findItem = state.items.find((item) => {
@@ -22,7 +39,7 @@ const cartSlice = createSlice({
         return JSON.stringify(item) === JSON.stringify(currentItem);
       });
 
-      if (findItem) {
+      if (findItem && typeof findItem.count !== "undefined") {
         findItem.count++;
       } else {
         currentItem.count = 1;
@@ -30,10 +47,14 @@ const cartSlice = createSlice({
       }
 
       state.totalPrice = state.items.reduce((sum, item) => {
-        return item.price * item.count + sum;
+        if (typeof item.count !== "undefined") {
+          return item.price * item.count + sum;
+        } else {
+          return item.price + sum;
+        }
       }, 0);
     },
-    removeItemFromCart(state, action) {
+    removeItemFromCart(state, action: PayloadAction<CartItem>) {
       const currentItem = action.payload;
 
       const findItem = state.items.find(
@@ -45,17 +66,28 @@ const cartSlice = createSlice({
           state.items = state.items.filter(
             (item) => JSON.stringify(item) !== JSON.stringify(findItem)
           );
-        } else if (findItem.count > 1) {
+        } else if (
+          typeof findItem.count !== "undefined" &&
+          findItem.count > 1
+        ) {
           const index = state.items.indexOf(findItem);
-          state.items[index].count--;
+          const reducedItem = state.items[index];
+
+          if (reducedItem.count) {
+            reducedItem.count--;
+          }
         }
       }
 
       state.totalPrice = state.items.reduce((sum, item) => {
-        return item.price * item.count + sum;
+        if (typeof item.count !== "undefined") {
+          return item.price * item.count + sum;
+        } else {
+          return item.price + sum;
+        }
       }, 0);
     },
-    deleteItemInCart(state, action) {
+    deleteItemInCart(state, action: PayloadAction<CartItem>) {
       const currentItem = action.payload;
 
       const findItem = state.items.find(
@@ -68,7 +100,11 @@ const cartSlice = createSlice({
       }
 
       state.totalPrice = state.items.reduce((sum, item) => {
-        return item.price * item.count + sum;
+        if (typeof item.count !== "undefined") {
+          return item.price * item.count + sum;
+        } else {
+          return item.price + sum;
+        }
       }, 0);
     },
     clearCart(state) {
@@ -78,7 +114,7 @@ const cartSlice = createSlice({
   },
 });
 
-export const cartSelector = (state) => state.cart;
+export const cartSelector = (state: RootState) => state.cart;
 
 export const {
   addItemToCart,

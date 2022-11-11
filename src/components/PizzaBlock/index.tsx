@@ -2,23 +2,27 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { addItemToCart, cartSelector } from "../../redux/slices/cartSlice";
+import {
+  addItemToCart,
+  cartSelector,
+  CartItem,
+} from "../../redux/slices/cartSlice";
 
-type PizzaBlockProps = {
-  id: string;
-  title: string;
-  price: number;
-  imageUrl: string;
-  sizes: number[];
-  types: number[];
-};
+// type PizzaBlockProps = {
+//   id: string;
+//   title: string;
+//   price: number;
+//   imageUrl: string;
+//   sizes: number[];
+//   types: number[];
+// };
 
-type CartItem = {
+type CartItemS = {
   id: string;
   count: number;
 };
 
-const PizzaBlock: React.FC<PizzaBlockProps> = ({
+const PizzaBlock: React.FC<CartItem> = ({
   id,
   title,
   price,
@@ -65,7 +69,10 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
     ));
   }
 
-  function renderAddedCounterElement(cartItems: CartItem[], curItemId: string) {
+  function renderAddedCounterElement(
+    cartItems: CartItemS[],
+    curItemId: string
+  ) {
     const findCurItemInCart = cartItems.filter((item) => item.id === curItemId);
     let count;
     if (findCurItemInCart.length > 0) {
@@ -78,7 +85,7 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
   }
 
   const handleAddPizza = () => {
-    const currentPizza = {
+    const currentPizza: CartItem = {
       id,
       title,
       imageUrl,

@@ -5,18 +5,18 @@ import {
   filterSelector,
 } from "../redux/slices/filterSlice";
 
+const categories: string[] = [
+  "Все",
+  "Мясные",
+  "Вегетарианская",
+  "Гриль",
+  "Острые",
+  "Закрытые",
+];
+
 const Categories: React.FC = () => {
   const { activeCategoryIndex } = useSelector(filterSelector);
   const dispatch = useDispatch();
-
-  const categories: string[] = [
-    "Все",
-    "Мясные",
-    "Вегетарианская",
-    "Гриль",
-    "Острые",
-    "Закрытые",
-  ];
 
   const categoriesMenu = renderCategories(categories);
 

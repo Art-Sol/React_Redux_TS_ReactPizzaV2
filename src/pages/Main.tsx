@@ -1,9 +1,14 @@
 import React from "react";
 import qs from "qs";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { setFilters, filterSelector } from "../redux/slices/filterSlice";
+import { useAppDispatch } from "../redux/store";
+import {
+  setFilters,
+  filterSelector,
+  SortTypeItem,
+} from "../redux/slices/filterSlice";
 import { fetchPizzas, pizzaSelector } from "../redux/slices/pizzasSlice";
 import { sortTypes } from "../components/Sort";
 import Categories from "../components/Categories";
@@ -18,7 +23,7 @@ const Main: React.FC = () => {
   const { activeCategoryIndex, activeSortType, currentPage, searchValue } =
     useSelector(filterSelector);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
 
@@ -72,10 +77,16 @@ const Main: React.FC = () => {
         .find((item) => item.order === queryParams.order);
       delete queryParams.order;
 
-      const params = { ...queryParams, sort };
+      if (sort !== undefined) {
+        const params: {
+          category: number;
+          page: number;
+          sort: SortTypeItem;
+        } = { ...queryParams, sort };
 
-      dispatch(setFilters(params));
-      isSearch.current = true;
+        dispatch(setFilters(params));
+        isSearch.current = true;
+      }
     }
   }
 
@@ -100,10 +111,7 @@ const Main: React.FC = () => {
       limit,
     };
 
-    dispatch(
-      // @ts-ignore
-      fetchPizzas(params)
-    );
+    dispatch(fetchPizzas(params));
   };
 
   function renderPizzaBlockList(arrayPizzas: any, limit: number) {

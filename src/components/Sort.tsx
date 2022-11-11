@@ -34,8 +34,11 @@ const Sort: React.FC = () => {
     };
   }, []);
 
-  const handleClickOutside = (event: any) => {
-    if (!event.path.includes(sortPopupRef.current)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      sortPopupRef.current &&
+      !event.composedPath().includes(sortPopupRef.current)
+    ) {
       setIsOpenPopup(false);
     }
   };
