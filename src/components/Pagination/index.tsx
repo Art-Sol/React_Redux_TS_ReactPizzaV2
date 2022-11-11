@@ -9,7 +9,7 @@ import {
 
 import styles from "./Pagination.module.scss";
 
-const Pagination = () => {
+const Pagination: React.FC = () => {
   const { currentPage } = useSelector(filterSelector);
   const dispatch = useDispatch();
 
@@ -23,7 +23,6 @@ const Pagination = () => {
       pageRangeDisplayed={5}
       pageCount={3}
       forcePage={currentPage - 1}
-      renderOnZeroPageCount={null}
     />
   );
 };

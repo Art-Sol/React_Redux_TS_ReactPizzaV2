@@ -56,7 +56,6 @@ const cartSlice = createSlice({
       }, 0);
     },
     deleteItemInCart(state, action) {
-      console.log("delete");
       const currentItem = action.payload;
 
       const findItem = state.items.find(

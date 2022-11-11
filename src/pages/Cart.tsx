@@ -7,11 +7,14 @@ import CartEmpty from "../components/CartEmpty";
 import { clearCart } from "../redux/slices/cartSlice";
 import { cartSelector } from "../redux/slices/cartSlice";
 
-const Cart = () => {
+const Cart: React.FC = () => {
   const { items, totalPrice } = useSelector(cartSelector);
   const dispatch = useDispatch();
 
-  const totalItemsCount = items.reduce((sum, item) => sum + item.count, 0);
+  const totalItemsCount = items.reduce(
+    (sum: number, item: any) => sum + item.count,
+    0
+  );
   const pizzasList = renderPizzaList(items);
 
   const handleClearCart = () => {
@@ -20,8 +23,8 @@ const Cart = () => {
     }
   };
 
-  function renderPizzaList(items) {
-    return items.map((item, i) => <CartItem key={i} {...item} />);
+  function renderPizzaList(items: any) {
+    return items.map((item: any, i: number) => <CartItem key={i} {...item} />);
   }
 
   if (items.length === 0) {

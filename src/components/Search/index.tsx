@@ -9,7 +9,7 @@ import styles from "./Search.module.scss";
 const Search = () => {
   const [inputValue, setInputValue] = React.useState("");
   const dispatch = useDispatch();
-  const inputRef = React.useRef();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   // eslint-disable-next-line
   const debounceUpdateSearchValue = React.useCallback(
@@ -22,10 +22,10 @@ const Search = () => {
   const handleClearInput = () => {
     dispatch(setSearchValue(""));
     setInputValue("");
-    inputRef.current.focus();
+    inputRef.current?.focus();
   };
 
-  const handleChangeInputValue = (e) => {
+  const handleChangeInputValue = (e: any) => {
     setInputValue(e.target.value);
     debounceUpdateSearchValue(e.target.value);
   };
@@ -66,7 +66,7 @@ const SvgSearchIcon = () => {
   );
 };
 
-const SvgClearIcon = ({ handleClearInput }) => {
+const SvgClearIcon = ({ handleClearInput }: any) => {
   return (
     <svg
       className={styles.clearIcon}

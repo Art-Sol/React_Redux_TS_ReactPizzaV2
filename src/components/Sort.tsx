@@ -1,10 +1,15 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { changeSortType } from "../redux/slices/filterSlice";
-import { filterSelector } from "../redux/slices/filterSlice";
+import { changeSortType, filterSelector } from "../redux/slices/filterSlice";
 
-export const sortTypes = [
+type sortTypeItem = {
+  name: string;
+  sortProp: string;
+  order: string;
+};
+
+export const sortTypes: sortTypeItem[] = [
   { name: "популярности (возр.)", sortProp: "rating", order: "asc" },
   { name: "популярности (убыв.)", sortProp: "rating", order: "desc" },
   { name: "цене (возр.)", sortProp: "price", order: "asc" },
@@ -13,13 +18,13 @@ export const sortTypes = [
   { name: "алфавиту (убыв.)", sortProp: "title", order: "desc" },
 ];
 
-const Sort = () => {
+const Sort: React.FC = () => {
   const [isOpenPopup, setIsOpenPopup] = React.useState(false);
   const { activeSortType } = useSelector(filterSelector);
   const dispatch = useDispatch();
 
   const sortPopupBlock = renderSortPopupBlock(sortTypes, activeSortType);
-  const sortPopupRef = React.useRef();
+  const sortPopupRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     document.body.addEventListener("click", handleClickOutside);
@@ -29,18 +34,21 @@ const Sort = () => {
     };
   }, []);
 
-  const handleClickOutside = (event) => {
+  const handleClickOutside = (event: any) => {
     if (!event.path.includes(sortPopupRef.current)) {
       setIsOpenPopup(false);
     }
   };
 
-  const handleSelectActiveSortType = (sortType) => {
+  const handleSelectActiveSortType = (sortType: sortTypeItem) => {
     dispatch(changeSortType(sortType));
     setIsOpenPopup((isOpenPopup) => !isOpenPopup);
   };
 
-  function renderSortPopupBlock(arraySortTypes, activeSortType) {
+  function renderSortPopupBlock(
+    arraySortTypes: sortTypeItem[],
+    activeSortType: sortTypeItem
+  ) {
     const sortTypesList = arraySortTypes.map((currentSortType, i) => (
       <li
         key={i}

@@ -1,14 +1,15 @@
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   changeCategoryIndex,
   filterSelector,
 } from "../redux/slices/filterSlice";
 
-const Categories = () => {
+const Categories: React.FC = () => {
   const { activeCategoryIndex } = useSelector(filterSelector);
   const dispatch = useDispatch();
 
-  const categories = [
+  const categories: string[] = [
     "Все",
     "Мясные",
     "Вегетарианская",
@@ -16,9 +17,10 @@ const Categories = () => {
     "Острые",
     "Закрытые",
   ];
+
   const categoriesMenu = renderCategories(categories);
 
-  function renderCategories(arrayCategories) {
+  function renderCategories(arrayCategories: string[]) {
     return arrayCategories.map((categoryName, i) => (
       <li
         key={i}

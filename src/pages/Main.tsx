@@ -13,7 +13,7 @@ import Skeleton from "../components/PizzaBlock/Skeleton";
 import ErrorRequest from "../components/PizzaBlock/ErrorRequest";
 import Pagination from "../components/Pagination";
 
-const Main = () => {
+const Main: React.FC = () => {
   const { pizzas, status } = useSelector(pizzaSelector);
   const { activeCategoryIndex, activeSortType, currentPage, searchValue } =
     useSelector(filterSelector);
@@ -26,8 +26,8 @@ const Main = () => {
   const pizzaBlocks = renderPizzaBlockList(pizzas, limitItemPerPage);
 
   React.useEffect(() => {
-    setQueryParamsToFilters();
-    window.scrollTo(0, 0); // eslint-disable-next-line
+    window.scrollTo(0, 0);
+    setQueryParamsToFilters(); // eslint-disable-next-line
   }, []);
 
   React.useEffect(() => {
@@ -49,7 +49,11 @@ const Main = () => {
     // eslint-disable-next-line
   }, [activeCategoryIndex, activeSortType, searchValue, currentPage]);
 
-  function setFilterParamsToQuery(category, sort, page) {
+  function setFilterParamsToQuery(
+    category: number,
+    sort: { sortProp: string; order: string },
+    page: number
+  ) {
     const queryString = qs.stringify({
       category,
       sort: sort.sortProp,
@@ -62,6 +66,7 @@ const Main = () => {
   function setQueryParamsToFilters() {
     if (window.location.search) {
       const queryParams = qs.parse(window.location.search.substring(1));
+
       const sort = sortTypes
         .filter((item) => item.sortProp === queryParams.sort)
         .find((item) => item.order === queryParams.order);
@@ -74,7 +79,13 @@ const Main = () => {
     }
   }
 
-  const getPizzas = async (category, sort, searchValue, page, limit) => {
+  const getPizzas = async (
+    category: number,
+    sort: { sortProp: string; order: string },
+    searchValue: string,
+    page: number,
+    limit: number
+  ) => {
     const catagoryName = category === 0 ? "" : category;
     const sortName = sort.sortProp;
     const orderType = sort.order;
@@ -89,10 +100,13 @@ const Main = () => {
       limit,
     };
 
-    dispatch(fetchPizzas(params));
+    dispatch(
+      // @ts-ignore
+      fetchPizzas(params)
+    );
   };
 
-  function renderPizzaBlockList(arrayPizzasProps, limit) {
+  function renderPizzaBlockList(arrayPizzas: any, limit: number) {
     if (status === "loading") {
       return [...new Array(limit)].map((_, i) => <Skeleton key={i} />);
     }
@@ -101,8 +115,8 @@ const Main = () => {
       return <ErrorRequest />;
     }
 
-    return arrayPizzasProps.map((pizzaProps) => (
-      <PizzaBlock key={pizzaProps.id} {...pizzaProps} />
+    return arrayPizzas.map((pizza: any) => (
+      <PizzaBlock key={pizza.id} {...pizza} />
     ));
   }
 
