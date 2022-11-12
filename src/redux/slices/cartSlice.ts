@@ -3,7 +3,7 @@ import _ from "lodash";
 
 import { RootState } from "../store";
 
-export type CartItem = {
+export type CartPizzaItem = {
   id: string;
   title: string;
   imageUrl: string;
@@ -14,7 +14,7 @@ export type CartItem = {
 };
 
 interface ICartSliceState {
-  items: CartItem[];
+  items: CartPizzaItem[];
   totalPrice: number;
 }
 
@@ -27,7 +27,7 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addItemToCart(state, action: PayloadAction<CartItem>) {
+    addItemToCart(state, action: PayloadAction<CartPizzaItem>) {
       const currentItem = action.payload;
 
       const findItem = state.items.find((item) => {
@@ -54,7 +54,7 @@ const cartSlice = createSlice({
         }
       }, 0);
     },
-    removeItemFromCart(state, action: PayloadAction<CartItem>) {
+    removeItemFromCart(state, action: PayloadAction<CartPizzaItem>) {
       const currentItem = action.payload;
 
       const findItem = state.items.find(
@@ -87,7 +87,7 @@ const cartSlice = createSlice({
         }
       }, 0);
     },
-    deleteItemInCart(state, action: PayloadAction<CartItem>) {
+    deleteItemInCart(state, action: PayloadAction<CartPizzaItem>) {
       const currentItem = action.payload;
 
       const findItem = state.items.find(

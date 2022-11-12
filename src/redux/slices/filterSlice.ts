@@ -8,11 +8,11 @@ export type SortTypeItem = {
   order: string; //"asc" | "desc"
 };
 
-interface IFilterSliceState {
+export interface IFilterSliceState {
   activeCategoryIndex: number;
   activeSortType: SortTypeItem;
   currentPage: number;
-  searchValue: string;
+  searchValue?: string;
 }
 
 const initialState: IFilterSliceState = {
@@ -39,17 +39,10 @@ const filterSlice = createSlice({
     changeCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
     },
-    setFilters: (
-      state,
-      action: PayloadAction<{
-        category: number;
-        page: number;
-        sort: SortTypeItem;
-      }>
-    ) => {
-      state.activeCategoryIndex = Number(action.payload.category);
-      state.currentPage = Number(action.payload.page);
-      state.activeSortType = action.payload.sort;
+    setFilters: (state, action: PayloadAction<IFilterSliceState>) => {
+      state.activeCategoryIndex = action.payload.activeCategoryIndex;
+      state.currentPage = action.payload.currentPage;
+      state.activeSortType = action.payload.activeSortType;
     },
     setSearchValue: (state, action: PayloadAction<string>) => {
       state.searchValue = action.payload;

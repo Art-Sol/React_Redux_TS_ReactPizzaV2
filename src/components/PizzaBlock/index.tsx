@@ -5,8 +5,10 @@ import { Link } from "react-router-dom";
 import {
   addItemToCart,
   cartSelector,
-  CartItem,
+  CartPizzaItem,
 } from "../../redux/slices/cartSlice";
+
+import { Pizza } from "../../redux/slices/pizzasSlice";
 
 // type PizzaBlockProps = {
 //   id: string;
@@ -17,12 +19,12 @@ import {
 //   types: number[];
 // };
 
-type CartItemS = {
-  id: string;
-  count: number;
-};
+// type CartItemS = {
+//   id: string;
+//   count: number;
+// };
 
-const PizzaBlock: React.FC<CartItem> = ({
+const PizzaBlock: React.FC<Pizza> = ({
   id,
   title,
   price,
@@ -43,7 +45,7 @@ const PizzaBlock: React.FC<CartItem> = ({
   const addedCount = renderAddedCounterElement(items, id);
 
   function renderPizzaSizesList(arraySizes: number[]) {
-    return arraySizes.map((item, i) => (
+    return arraySizes.map((item: number, i: number) => (
       <li
         key={i}
         className={activeSize === i ? "active" : ""}
@@ -70,14 +72,16 @@ const PizzaBlock: React.FC<CartItem> = ({
   }
 
   function renderAddedCounterElement(
-    cartItems: CartItemS[],
+    cartItems: CartPizzaItem[],
     curItemId: string
   ) {
-    const findCurItemInCart = cartItems.filter((item) => item.id === curItemId);
+    const findCurItemInCart = cartItems.filter(
+      (item: CartPizzaItem) => item.id === curItemId
+    );
     let count;
     if (findCurItemInCart.length > 0) {
-      count = findCurItemInCart.reduce((acc, item) => {
-        return acc + item.count;
+      count = findCurItemInCart.reduce((acc, item: CartPizzaItem) => {
+        return item.count ? acc + item.count : acc;
       }, 0);
     }
 
@@ -85,7 +89,7 @@ const PizzaBlock: React.FC<CartItem> = ({
   }
 
   const handleAddPizza = () => {
-    const currentPizza: CartItem = {
+    const currentPizza: CartPizzaItem = {
       id,
       title,
       imageUrl,

@@ -7,9 +7,10 @@ import { useAppDispatch } from "../redux/store";
 import {
   setFilters,
   filterSelector,
-  SortTypeItem,
+  IFilterSliceState,
 } from "../redux/slices/filterSlice";
-import { fetchPizzas, pizzaSelector } from "../redux/slices/pizzasSlice";
+import { fetchPizzas, pizzaSelector, Pizza } from "../redux/slices/pizzasSlice";
+
 import { sortTypes } from "../components/Sort";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
@@ -50,15 +51,16 @@ const Main: React.FC = () => {
     if (isMounted.current) {
       setFilterParamsToQuery(activeCategoryIndex, activeSortType, currentPage);
     }
-    isMounted.current = true;
-    // eslint-disable-next-line
+    isMounted.current = true; // eslint-disable-next-line
   }, [activeCategoryIndex, activeSortType, searchValue, currentPage]);
 
+  // Функиця устанавливает в http адрес параметры фильтрации
+  //	(чтобы можно было поделиться ссылкой на определенный набор пицц)
   function setFilterParamsToQuery(
     category: number,
     sort: { sortProp: string; order: string },
     page: number
-  ) {
+  ): void {
     const queryString = qs.stringify({
       category,
       sort: sort.sortProp,
@@ -68,21 +70,25 @@ const Main: React.FC = () => {
     navigate(`?${queryString}`);
   }
 
+  // Функиця берет из http адреса параметры фильтрации и устанавливает их
+  // (если пользоваталю дали ссылку на определенный набор пицц)
   function setQueryParamsToFilters() {
     if (window.location.search) {
       const queryParams = qs.parse(window.location.search.substring(1));
+      const { category, page, sort, order } = queryParams;
 
-      const sort = sortTypes
-        .filter((item) => item.sortProp === queryParams.sort)
-        .find((item) => item.order === queryParams.order);
-      delete queryParams.order;
+      const activeCategoryIndex = Number(category);
+      const currentPage = Number(page);
+      const activeSortType = sortTypes
+        .filter((item) => item.sortProp === sort)
+        .find((item) => item.order === order);
 
-      if (sort !== undefined) {
-        const params: {
-          category: number;
-          page: number;
-          sort: SortTypeItem;
-        } = { ...queryParams, sort };
+      if (activeSortType !== undefined) {
+        const params: IFilterSliceState = {
+          activeCategoryIndex,
+          currentPage,
+          activeSortType,
+        };
 
         dispatch(setFilters(params));
         isSearch.current = true;
@@ -93,7 +99,7 @@ const Main: React.FC = () => {
   const getPizzas = async (
     category: number,
     sort: { sortProp: string; order: string },
-    searchValue: string,
+    searchValue: string | undefined,
     page: number,
     limit: number
   ) => {
@@ -114,7 +120,7 @@ const Main: React.FC = () => {
     dispatch(fetchPizzas(params));
   };
 
-  function renderPizzaBlockList(arrayPizzas: any, limit: number) {
+  function renderPizzaBlockList(arrayPizzas: Pizza[], limit: number) {
     if (status === "loading") {
       return [...new Array(limit)].map((_, i) => <Skeleton key={i} />);
     }

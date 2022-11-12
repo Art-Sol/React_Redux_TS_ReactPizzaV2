@@ -5,18 +5,10 @@ import {
   addItemToCart,
   removeItemFromCart,
   deleteItemInCart,
+  CartPizzaItem,
 } from "../redux/slices/cartSlice";
 
-type CartItemProps = {
-  title: string;
-  type: string;
-  size: number;
-  imageUrl: string;
-  price: number;
-  count: number;
-};
-
-const CartItem: React.FC<CartItemProps> = (currentItem) => {
+const CartItem: React.FC<CartPizzaItem> = (currentItem) => {
   const dispatch = useDispatch();
 
   const { title, type, size, imageUrl, price, count } = currentItem;
@@ -92,7 +84,7 @@ const CartItem: React.FC<CartItemProps> = (currentItem) => {
         </div>
       </div>
       <div className="cart__item-price">
-        <b>{price * count}</b>
+        <b>{count ? price * count : price}</b>
       </div>
       <div className="cart__item-remove">
         <div
