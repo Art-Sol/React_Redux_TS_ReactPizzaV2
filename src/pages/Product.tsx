@@ -2,12 +2,11 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+// types and interfaces
+import { Pizza } from "../redux/slices/pizzasSlice";
+
 const Product: React.FC = () => {
-  const [currentPizza, setCurrentPizza] = React.useState<{
-    imageUrl: string;
-    price: number;
-    title: string;
-  }>();
+  const [currentPizza, setCurrentPizza] = React.useState<Pizza>();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -20,7 +19,7 @@ const Product: React.FC = () => {
       const url = `https://63613cd267d3b7a0a6c1cb49.mockapi.io/items/${pizzaId}`;
 
       try {
-        const { data } = await axios.get(url);
+        const { data } = await axios.get<Pizza>(url);
         setCurrentPizza(data);
       } catch (error) {
         alert(

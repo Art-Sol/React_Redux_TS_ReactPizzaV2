@@ -4,8 +4,8 @@ import { RootState } from "../store";
 
 export type SortTypeItem = {
   name: string;
-  sortProp: string; //"rating" | "price" | "title"
-  order: string; //"asc" | "desc"
+  sortProp: string;
+  order: string;
 };
 
 export interface IFilterSliceState {

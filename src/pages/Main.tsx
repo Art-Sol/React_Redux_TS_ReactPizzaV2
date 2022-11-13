@@ -4,12 +4,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { useAppDispatch } from "../redux/store";
-import {
-  setFilters,
-  filterSelector,
-  IFilterSliceState,
-} from "../redux/slices/filterSlice";
-import { fetchPizzas, pizzaSelector, Pizza } from "../redux/slices/pizzasSlice";
+import { setFilters, filterSelector } from "../redux/slices/filterSlice";
+import { fetchPizzas, pizzaSelector } from "../redux/slices/pizzasSlice";
 
 import { sortTypes } from "../components/Sort";
 import Categories from "../components/Categories";
@@ -18,6 +14,17 @@ import PizzaBlock from "../components/PizzaBlock";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import ErrorRequest from "../components/PizzaBlock/ErrorRequest";
 import Pagination from "../components/Pagination";
+
+// types and interfaces
+import { IFilterSliceState } from "../redux/slices/filterSlice";
+import { Pizza } from "../redux/slices/pizzasSlice";
+type getPizzasArgs = {
+  activeCategoryIndex: number;
+  activeSortType: { sortProp: string; order: string };
+  searchValue: string | undefined;
+  currentPage: number;
+  limitItemPerPage: number;
+};
 
 const Main: React.FC = () => {
   const { pizzas, status } = useSelector(pizzaSelector);
@@ -38,13 +45,13 @@ const Main: React.FC = () => {
 
   React.useEffect(() => {
     if (!isSearch.current) {
-      getPizzas(
+      getPizzas({
         activeCategoryIndex,
         activeSortType,
         searchValue,
         currentPage,
-        limitItemPerPage
-      );
+        limitItemPerPage,
+      });
     }
     isSearch.current = false;
 
@@ -54,8 +61,8 @@ const Main: React.FC = () => {
     isMounted.current = true; // eslint-disable-next-line
   }, [activeCategoryIndex, activeSortType, searchValue, currentPage]);
 
-  // Функиця устанавливает в http адрес параметры фильтрации
-  //	(чтобы можно было поделиться ссылкой на определенный набор пицц)
+  //  Функиця устанавливает в http адрес параметры фильтрации
+  //  (чтобы можно было поделиться ссылкой на определенный набор пицц)
   function setFilterParamsToQuery(
     category: number,
     sort: { sortProp: string; order: string },
@@ -96,16 +103,16 @@ const Main: React.FC = () => {
     }
   }
 
-  const getPizzas = async (
-    category: number,
-    sort: { sortProp: string; order: string },
-    searchValue: string | undefined,
-    page: number,
-    limit: number
-  ) => {
-    const catagoryName = category === 0 ? "" : category;
-    const sortName = sort.sortProp;
-    const orderType = sort.order;
+  const getPizzas = async ({
+    activeCategoryIndex,
+    activeSortType,
+    currentPage,
+    limitItemPerPage,
+    searchValue,
+  }: getPizzasArgs) => {
+    const catagoryName = activeCategoryIndex === 0 ? "" : activeCategoryIndex;
+    const sortName = activeSortType.sortProp;
+    const orderType = activeSortType.order;
     const searchData = searchValue ? searchValue : "";
 
     const params = {
@@ -113,8 +120,8 @@ const Main: React.FC = () => {
       sortName,
       orderType,
       searchData,
-      page,
-      limit,
+      page: currentPage,
+      limit: limitItemPerPage,
     };
 
     dispatch(fetchPizzas(params));
@@ -129,7 +136,7 @@ const Main: React.FC = () => {
       return <ErrorRequest />;
     }
 
-    return arrayPizzas.map((pizza: any) => (
+    return arrayPizzas.map((pizza: Pizza) => (
       <PizzaBlock key={pizza.id} {...pizza} />
     ));
   }

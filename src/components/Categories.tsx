@@ -5,7 +5,10 @@ import {
   filterSelector,
 } from "../redux/slices/filterSlice";
 
-const categories: string[] = [
+// types and interfaces
+type categoriesType = string[];
+
+const categories: categoriesType = [
   "Все",
   "Мясные",
   "Вегетарианская",
@@ -20,7 +23,7 @@ const Categories: React.FC = () => {
 
   const categoriesMenu = renderCategories(categories);
 
-  function renderCategories(arrayCategories: string[]) {
+  function renderCategories(arrayCategories: categoriesType) {
     return arrayCategories.map((categoryName, i) => (
       <li
         key={i}

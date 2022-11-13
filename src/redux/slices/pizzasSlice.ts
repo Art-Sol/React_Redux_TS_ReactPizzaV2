@@ -58,9 +58,9 @@ const pizzasSlice = createSlice({
   name: "pizza",
   initialState,
   reducers: {
-    setPizzas(state, action) {
-      state.pizzas = action.payload;
-    },
+    // setPizzas(state, action) {
+    //   state.pizzas = action.payload;
+    // },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPizzas.pending, (state) => {
@@ -83,6 +83,6 @@ const pizzasSlice = createSlice({
 
 export const pizzaSelector = (state: RootState) => state.pizza;
 
-export const { setPizzas } = pizzasSlice.actions;
+// export const { setPizzas } = pizzasSlice.actions;
 
 export default pizzasSlice.reducer;

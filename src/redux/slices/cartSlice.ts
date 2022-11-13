@@ -30,7 +30,7 @@ const cartSlice = createSlice({
     addItemToCart(state, action: PayloadAction<CartPizzaItem>) {
       const currentItem = action.payload;
 
-      const findItem = state.items.find((item) => {
+      const findItem = state.items.find((item: CartPizzaItem) => {
         if (!currentItem.count) {
           const cloneItem = _.cloneDeep(item);
           delete cloneItem.count;
@@ -46,19 +46,14 @@ const cartSlice = createSlice({
         state.items.push(currentItem);
       }
 
-      state.totalPrice = state.items.reduce((sum, item) => {
-        if (typeof item.count !== "undefined") {
-          return item.price * item.count + sum;
-        } else {
-          return item.price + sum;
-        }
-      }, 0);
+      state.totalPrice = totalPriceCalc(state.items);
     },
     removeItemFromCart(state, action: PayloadAction<CartPizzaItem>) {
       const currentItem = action.payload;
 
       const findItem = state.items.find(
-        (item) => JSON.stringify(item) === JSON.stringify(currentItem)
+        (item: CartPizzaItem) =>
+          JSON.stringify(item) === JSON.stringify(currentItem)
       );
 
       if (findItem) {
@@ -66,10 +61,7 @@ const cartSlice = createSlice({
           state.items = state.items.filter(
             (item) => JSON.stringify(item) !== JSON.stringify(findItem)
           );
-        } else if (
-          typeof findItem.count !== "undefined" &&
-          findItem.count > 1
-        ) {
+        } else if (findItem.count && findItem.count > 1) {
           const index = state.items.indexOf(findItem);
           const reducedItem = state.items[index];
 
@@ -79,13 +71,7 @@ const cartSlice = createSlice({
         }
       }
 
-      state.totalPrice = state.items.reduce((sum, item) => {
-        if (typeof item.count !== "undefined") {
-          return item.price * item.count + sum;
-        } else {
-          return item.price + sum;
-        }
-      }, 0);
+      state.totalPrice = totalPriceCalc(state.items);
     },
     deleteItemInCart(state, action: PayloadAction<CartPizzaItem>) {
       const currentItem = action.payload;
@@ -99,13 +85,7 @@ const cartSlice = createSlice({
         state.items.splice(index, 1);
       }
 
-      state.totalPrice = state.items.reduce((sum, item) => {
-        if (typeof item.count !== "undefined") {
-          return item.price * item.count + sum;
-        } else {
-          return item.price + sum;
-        }
-      }, 0);
+      state.totalPrice = totalPriceCalc(state.items);
     },
     clearCart(state) {
       state.items = [];
@@ -113,6 +93,16 @@ const cartSlice = createSlice({
     },
   },
 });
+
+const totalPriceCalc = (items: CartPizzaItem[]): number => {
+  return items.reduce((sum, item) => {
+    if (typeof item.count !== "undefined") {
+      return item.price * item.count + sum;
+    } else {
+      return item.price + sum;
+    }
+  }, 0);
+};
 
 export const cartSelector = (state: RootState) => state.cart;
 
