@@ -17,7 +17,7 @@ const categories: CategoriesType = [
   "Закрытые",
 ];
 
-const Categories: React.FC<CategoriesPropsType> = React.memo(
+export const Categories: React.FC<CategoriesPropsType> = React.memo(
   ({ activeCategoryIndex }) => {
     const dispatch = useDispatch();
     const categoriesMenu = renderCategories(categories);
@@ -41,5 +41,3 @@ const Categories: React.FC<CategoriesPropsType> = React.memo(
     );
   }
 );
-
-export default Categories;

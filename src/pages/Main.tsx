@@ -9,13 +9,16 @@ import { fetchPizzas } from "../redux/pizzas/asyncActions";
 import { filterSelector } from "../redux/filter/selectors";
 import { pizzaSelector } from "../redux/pizzas/selectors";
 
-import { sortTypes } from "../components/Sort";
-import Categories from "../components/Categories";
-import Sort from "../components/Sort";
-import PizzaBlock from "../components/PizzaBlock";
-import Skeleton from "../components/PizzaBlock/Skeleton";
-import ErrorRequest from "../components/PizzaBlock/ErrorRequest";
-import Pagination from "../components/Pagination";
+import { sortTypes } from "../components";
+
+import {
+  Categories,
+  Sort,
+  PizzaBlock,
+  Skeleton,
+  ErrorRequest,
+  Pagination,
+} from "../components";
 
 import { IFilterSliceState } from "../redux/filter/types";
 import { Pizza } from "../redux/pizzas/types";

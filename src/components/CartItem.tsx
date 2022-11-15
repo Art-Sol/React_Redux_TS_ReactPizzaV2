@@ -9,7 +9,7 @@ import {
 
 import { CartPizzaItem } from "../redux/cart/types";
 
-const CartItem: React.FC<CartPizzaItem> = (currentItem) => {
+export const CartItem: React.FC<CartPizzaItem> = (currentItem) => {
   const dispatch = useDispatch();
 
   const { title, type, size, imageUrl, price, count } = currentItem;
@@ -69,8 +69,6 @@ const CartItem: React.FC<CartPizzaItem> = (currentItem) => {
     </div>
   );
 };
-
-export default CartItem;
 
 //  Svg icons:
 

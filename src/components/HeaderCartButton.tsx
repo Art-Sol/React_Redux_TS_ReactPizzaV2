@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { cartSelector } from "../redux/cart/selectors";
 import { CartPizzaItem } from "../redux/cart/types";
 
-const HeaderCartButton: React.FC = () => {
+export const HeaderCartButton: React.FC = () => {
   const { items, totalPrice } = useSelector(cartSelector);
   let isMounted = React.useRef(false);
 
@@ -33,8 +33,6 @@ const HeaderCartButton: React.FC = () => {
     </div>
   );
 };
-
-export default HeaderCartButton;
 
 //  Svg icons:
 

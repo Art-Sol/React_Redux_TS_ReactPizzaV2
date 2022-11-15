@@ -7,7 +7,7 @@ import { filterSelector } from "../../redux/filter/selectors";
 
 import styles from "./Pagination.module.scss";
 
-const Pagination: React.FC = () => {
+export const Pagination: React.FC = () => {
   const { currentPage } = useSelector(filterSelector);
   const dispatch = useDispatch();
 
@@ -24,5 +24,3 @@ const Pagination: React.FC = () => {
     />
   );
 };
-
-export default Pagination;

@@ -2,11 +2,11 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import Search from "./Search";
-import HeaderCartButton from "./HeaderCartButton";
+import { HeaderCartButton } from "../components";
 
 import logoSvg from "../assets/img/pizza-logo.svg";
 
-const Header: React.FC = () => {
+export const Header: React.FC = () => {
   const { pathname } = useLocation();
 
   return (
@@ -27,5 +27,3 @@ const Header: React.FC = () => {
     </div>
   );
 };
-
-export default Header;

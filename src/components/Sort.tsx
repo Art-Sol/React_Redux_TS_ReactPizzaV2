@@ -18,71 +18,73 @@ export const sortTypes: SortTypeItem[] = [
   { name: "алфавиту (убыв.)", sortProp: "title", order: "desc" },
 ];
 
-const Sort: React.FC<SortPropsType> = React.memo(({ activeSortType }) => {
-  const [isOpenPopup, setIsOpenPopup] = React.useState(false);
-  const dispatch = useDispatch();
+export const Sort: React.FC<SortPropsType> = React.memo(
+  ({ activeSortType }) => {
+    const [isOpenPopup, setIsOpenPopup] = React.useState(false);
+    const dispatch = useDispatch();
 
-  const sortPopupBlock = renderSortPopupBlock(sortTypes, activeSortType);
-  const sortPopupRef = React.useRef<HTMLDivElement>(null);
+    const sortPopupBlock = renderSortPopupBlock(sortTypes, activeSortType);
+    const sortPopupRef = React.useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
-    document.body.addEventListener("click", handleClickOutside);
+    React.useEffect(() => {
+      document.body.addEventListener("click", handleClickOutside);
 
-    return () => {
-      document.body.removeEventListener("click", handleClickOutside);
+      return () => {
+        document.body.removeEventListener("click", handleClickOutside);
+      };
+    }, []);
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sortPopupRef.current &&
+        !event.composedPath().includes(sortPopupRef.current)
+      ) {
+        setIsOpenPopup(false);
+      }
     };
-  }, []);
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      sortPopupRef.current &&
-      !event.composedPath().includes(sortPopupRef.current)
+    const handleSelectActiveSortType = (sortType: SortTypeItem) => {
+      dispatch(changeSortType(sortType));
+      setIsOpenPopup((isOpenPopup) => !isOpenPopup);
+    };
+
+    function renderSortPopupBlock(
+      arraySortTypes: SortTypeItem[],
+      activeSortType: SortTypeItem
     ) {
-      setIsOpenPopup(false);
+      const sortTypesList = arraySortTypes.map((currentSortType, i) => (
+        <li
+          key={i}
+          onClick={() => handleSelectActiveSortType(currentSortType)}
+          className={
+            activeSortType.name === currentSortType.name ? "active" : ""
+          }
+        >
+          {currentSortType.name}
+        </li>
+      ));
+
+      return (
+        <div className="sort__popup">
+          <ul>{sortTypesList}</ul>
+        </div>
+      );
     }
-  };
-
-  const handleSelectActiveSortType = (sortType: SortTypeItem) => {
-    dispatch(changeSortType(sortType));
-    setIsOpenPopup((isOpenPopup) => !isOpenPopup);
-  };
-
-  function renderSortPopupBlock(
-    arraySortTypes: SortTypeItem[],
-    activeSortType: SortTypeItem
-  ) {
-    const sortTypesList = arraySortTypes.map((currentSortType, i) => (
-      <li
-        key={i}
-        onClick={() => handleSelectActiveSortType(currentSortType)}
-        className={activeSortType.name === currentSortType.name ? "active" : ""}
-      >
-        {currentSortType.name}
-      </li>
-    ));
 
     return (
-      <div className="sort__popup">
-        <ul>{sortTypesList}</ul>
+      <div ref={sortPopupRef} className="sort">
+        <div className="sort__label">
+          <SvgSortArrowUpIcon />
+          <b>Сортировка по:</b>
+          <span onClick={() => setIsOpenPopup((isOpenPopup) => !isOpenPopup)}>
+            {activeSortType.name}
+          </span>
+        </div>
+        {isOpenPopup && sortPopupBlock}
       </div>
     );
   }
-
-  return (
-    <div ref={sortPopupRef} className="sort">
-      <div className="sort__label">
-        <SvgSortArrowUpIcon />
-        <b>Сортировка по:</b>
-        <span onClick={() => setIsOpenPopup((isOpenPopup) => !isOpenPopup)}>
-          {activeSortType.name}
-        </span>
-      </div>
-      {isOpenPopup && sortPopupBlock}
-    </div>
-  );
-});
-
-export default Sort;
+);
 
 //  Svg icons:
 

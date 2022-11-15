@@ -8,7 +8,7 @@ import { cartSelector } from "../../redux/cart/selectors";
 import { Pizza } from "../../redux/pizzas/types";
 import { CartPizzaItem } from "../../redux/cart/types";
 
-const PizzaBlock: React.FC<Pizza> = ({
+export const PizzaBlock: React.FC<Pizza> = ({
   id,
   title,
   price,
@@ -108,8 +108,6 @@ const PizzaBlock: React.FC<Pizza> = ({
     </div>
   );
 };
-
-export default PizzaBlock;
 
 //  Svg icons:
 
