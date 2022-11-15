@@ -4,8 +4,10 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { useAppDispatch } from "../redux/store";
-import { setFilters, filterSelector } from "../redux/slices/filterSlice";
-import { fetchPizzas, pizzaSelector } from "../redux/slices/pizzasSlice";
+import { setFilters } from "../redux/filter/slice";
+import { fetchPizzas } from "../redux/pizzas/asyncActions";
+import { filterSelector } from "../redux/filter/selectors";
+import { pizzaSelector } from "../redux/pizzas/selectors";
 
 import { sortTypes } from "../components/Sort";
 import Categories from "../components/Categories";
@@ -15,10 +17,10 @@ import Skeleton from "../components/PizzaBlock/Skeleton";
 import ErrorRequest from "../components/PizzaBlock/ErrorRequest";
 import Pagination from "../components/Pagination";
 
-// types and interfaces
-import { IFilterSliceState } from "../redux/slices/filterSlice";
-import { Pizza } from "../redux/slices/pizzasSlice";
-type getPizzasArgs = {
+import { IFilterSliceState } from "../redux/filter/types";
+import { Pizza } from "../redux/pizzas/types";
+
+type GetPizzasArgs = {
   activeCategoryIndex: number;
   activeSortType: { sortProp: string; order: string };
   searchValue: string | undefined;
@@ -109,7 +111,7 @@ const Main: React.FC = () => {
     currentPage,
     limitItemPerPage,
     searchValue,
-  }: getPizzasArgs) => {
+  }: GetPizzasArgs) => {
     const catagoryName = activeCategoryIndex === 0 ? "" : activeCategoryIndex;
     const sortName = activeSortType.sortProp;
     const orderType = activeSortType.order;
@@ -144,8 +146,8 @@ const Main: React.FC = () => {
   return (
     <div className="container">
       <div className="content__top">
-        <Categories />
-        <Sort />
+        <Categories activeCategoryIndex={activeCategoryIndex} />
+        <Sort activeSortType={activeSortType} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{pizzaBlocks}</div>

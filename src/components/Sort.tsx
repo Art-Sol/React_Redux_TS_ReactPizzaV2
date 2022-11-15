@@ -1,10 +1,13 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { changeSortType, filterSelector } from "../redux/slices/filterSlice";
+import { changeSortType } from "../redux/filter/slice";
 
-// types and interfaces
-import { SortTypeItem } from "../redux/slices/filterSlice";
+import { SortTypeItem } from "../redux/filter/types";
+
+type SortPropsType = {
+  activeSortType: SortTypeItem;
+};
 
 export const sortTypes: SortTypeItem[] = [
   { name: "популярности (возр.)", sortProp: "rating", order: "asc" },
@@ -15,9 +18,8 @@ export const sortTypes: SortTypeItem[] = [
   { name: "алфавиту (убыв.)", sortProp: "title", order: "desc" },
 ];
 
-const Sort: React.FC = () => {
+const Sort: React.FC<SortPropsType> = React.memo(({ activeSortType }) => {
   const [isOpenPopup, setIsOpenPopup] = React.useState(false);
-  const { activeSortType } = useSelector(filterSelector);
   const dispatch = useDispatch();
 
   const sortPopupBlock = renderSortPopupBlock(sortTypes, activeSortType);
@@ -78,7 +80,7 @@ const Sort: React.FC = () => {
       {isOpenPopup && sortPopupBlock}
     </div>
   );
-};
+});
 
 export default Sort;
 

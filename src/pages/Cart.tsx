@@ -4,10 +4,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 import CartItem from "../components/CartItem";
 import CartEmpty from "../components/CartEmpty";
-import { clearCart, cartSelector } from "../redux/slices/cartSlice";
+import { clearCart } from "../redux/cart/slice";
+import { cartSelector } from "../redux/cart/selectors";
 
-// types and interfaces
-import { CartPizzaItem } from "../redux/slices/cartSlice";
+import { CartPizzaItem } from "../redux/cart/types";
 
 const Cart: React.FC = () => {
   const { items, totalPrice } = useSelector(cartSelector);

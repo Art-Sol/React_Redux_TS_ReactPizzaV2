@@ -172,6 +172,20 @@ body {
             display: none;
           }
         }
+
+        &:disabled {
+          cursor: default;
+          border-color: #dddddd;
+          svg path {
+            fill: #dddddd;
+          }
+          &:active {
+            transform: none;
+          }
+          &:hover {
+            background-color: transparent;
+          }
+        }
       }
 
       b {
@@ -199,14 +213,14 @@ body {
       width: 4%;
 
       .button {
-        border-color: darken($color: $gray-line, $amount: 10);
+        border-color: #fe5f1e;
       }
 
       svg {
         transform: rotate(45deg);
 
         path {
-          fill: darken($color: $gray-line, $amount: 15);
+          fill: #fe5f1e;
         }
       }
 
@@ -218,8 +232,8 @@ body {
         }
         &:hover,
         &:active {
-          border-color: darken($color: $gray-line, $amount: 80);
-          background-color: darken($color: $gray-line, $amount: 80);
+          border-color: #fe5f1e;
+          background-color: #fe5f1e;
         }
       }
     }

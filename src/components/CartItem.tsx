@@ -5,10 +5,9 @@ import {
   addItemToCart,
   removeItemFromCart,
   deleteItemInCart,
-} from "../redux/slices/cartSlice";
+} from "../redux/cart/slice";
 
-// types and interfaces
-import { CartPizzaItem } from "../redux/slices/cartSlice";
+import { CartPizzaItem } from "../redux/cart/types";
 
 const CartItem: React.FC<CartPizzaItem> = (currentItem) => {
   const dispatch = useDispatch();
@@ -41,30 +40,31 @@ const CartItem: React.FC<CartPizzaItem> = (currentItem) => {
         </p>
       </div>
       <div className="cart__item-count">
-        <div
+        <button
+          disabled={count === 1}
           onClick={handleMinusPizza}
           className="button button--outline button--circle cart__item-count-minus"
         >
           <SvgMinusIcon />
-        </div>
+        </button>
         <b>{count}</b>
-        <div
+        <button
           onClick={handlePlusPizza}
           className="button button--outline button--circle cart__item-count-plus"
         >
           <SvgPlusIcon />
-        </div>
+        </button>
       </div>
       <div className="cart__item-price">
         <b>{count ? price * count : price}</b>
       </div>
       <div className="cart__item-remove">
-        <div
+        <button
           onClick={handleDeletePizza}
           className="button button--outline button--circle"
         >
           <SvgDeleteIcon />
-        </div>
+        </button>
       </div>
     </div>
   );

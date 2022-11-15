@@ -1,26 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import _ from "lodash";
 
-import { RootState } from "../store";
+import { getCartFromLocStor } from "../../utils/getCartFromLS";
+import { calcTotalPrice } from "../../utils/calcTotalPrice";
 
-export type CartPizzaItem = {
-  id: string;
-  title: string;
-  imageUrl: string;
-  type: string;
-  size: number;
-  price: number;
-  count?: number;
-};
+import { ICartSliceState, CartPizzaItem } from "./types";
 
-interface ICartSliceState {
-  items: CartPizzaItem[];
-  totalPrice: number;
-}
+const { items, totalPrice } = getCartFromLocStor();
 
 const initialState: ICartSliceState = {
-  items: [],
-  totalPrice: 0,
+  items,
+  totalPrice,
 };
 
 const cartSlice = createSlice({
@@ -46,7 +36,7 @@ const cartSlice = createSlice({
         state.items.push(currentItem);
       }
 
-      state.totalPrice = totalPriceCalc(state.items);
+      state.totalPrice = calcTotalPrice(state.items);
     },
     removeItemFromCart(state, action: PayloadAction<CartPizzaItem>) {
       const currentItem = action.payload;
@@ -56,22 +46,16 @@ const cartSlice = createSlice({
           JSON.stringify(item) === JSON.stringify(currentItem)
       );
 
-      if (findItem) {
-        if (findItem.count === 1) {
-          state.items = state.items.filter(
-            (item) => JSON.stringify(item) !== JSON.stringify(findItem)
-          );
-        } else if (findItem.count && findItem.count > 1) {
-          const index = state.items.indexOf(findItem);
-          const reducedItem = state.items[index];
+      if (findItem && findItem.count && findItem.count > 1) {
+        const index = state.items.indexOf(findItem);
+        const reducedItem = state.items[index];
 
-          if (reducedItem.count) {
-            reducedItem.count--;
-          }
+        if (reducedItem.count) {
+          reducedItem.count--;
         }
       }
 
-      state.totalPrice = totalPriceCalc(state.items);
+      state.totalPrice = calcTotalPrice(state.items);
     },
     deleteItemInCart(state, action: PayloadAction<CartPizzaItem>) {
       const currentItem = action.payload;
@@ -85,7 +69,7 @@ const cartSlice = createSlice({
         state.items.splice(index, 1);
       }
 
-      state.totalPrice = totalPriceCalc(state.items);
+      state.totalPrice = calcTotalPrice(state.items);
     },
     clearCart(state) {
       state.items = [];
@@ -93,18 +77,6 @@ const cartSlice = createSlice({
     },
   },
 });
-
-const totalPriceCalc = (items: CartPizzaItem[]): number => {
-  return items.reduce((sum, item) => {
-    if (typeof item.count !== "undefined") {
-      return item.price * item.count + sum;
-    } else {
-      return item.price + sum;
-    }
-  }, 0);
-};
-
-export const cartSelector = (state: RootState) => state.cart;
 
 export const {
   addItemToCart,

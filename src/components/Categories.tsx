@@ -1,14 +1,14 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  changeCategoryIndex,
-  filterSelector,
-} from "../redux/slices/filterSlice";
+import { useDispatch } from "react-redux";
 
-// types and interfaces
-type categoriesType = string[];
+import { changeCategoryIndex } from "../redux/filter/slice";
 
-const categories: categoriesType = [
+type CategoriesType = string[];
+type CategoriesPropsType = {
+  activeCategoryIndex: number;
+};
+
+const categories: CategoriesType = [
   "Все",
   "Мясные",
   "Вегетарианская",
@@ -17,29 +17,29 @@ const categories: categoriesType = [
   "Закрытые",
 ];
 
-const Categories: React.FC = () => {
-  const { activeCategoryIndex } = useSelector(filterSelector);
-  const dispatch = useDispatch();
+const Categories: React.FC<CategoriesPropsType> = React.memo(
+  ({ activeCategoryIndex }) => {
+    const dispatch = useDispatch();
+    const categoriesMenu = renderCategories(categories);
 
-  const categoriesMenu = renderCategories(categories);
+    function renderCategories(arrayCategories: CategoriesType) {
+      return arrayCategories.map((categoryName, i) => (
+        <li
+          key={i}
+          onClick={() => dispatch(changeCategoryIndex(i))}
+          className={activeCategoryIndex === i ? "active" : ""}
+        >
+          {categoryName}
+        </li>
+      ));
+    }
 
-  function renderCategories(arrayCategories: categoriesType) {
-    return arrayCategories.map((categoryName, i) => (
-      <li
-        key={i}
-        onClick={() => dispatch(changeCategoryIndex(i))}
-        className={activeCategoryIndex === i ? "active" : ""}
-      >
-        {categoryName}
-      </li>
-    ));
+    return (
+      <div className="categories">
+        <ul>{categoriesMenu}</ul>
+      </div>
+    );
   }
-
-  return (
-    <div className="categories">
-      <ul>{categoriesMenu}</ul>
-    </div>
-  );
-};
+);
 
 export default Categories;

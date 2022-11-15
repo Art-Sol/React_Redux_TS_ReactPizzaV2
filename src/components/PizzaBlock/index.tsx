@@ -2,11 +2,11 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { addItemToCart, cartSelector } from "../../redux/slices/cartSlice";
+import { addItemToCart } from "../../redux/cart/slice";
+import { cartSelector } from "../../redux/cart/selectors";
 
-// types and interfaces
-import { Pizza } from "../../redux/slices/pizzasSlice";
-import { CartPizzaItem } from "../../redux/slices/cartSlice";
+import { Pizza } from "../../redux/pizzas/types";
+import { CartPizzaItem } from "../../redux/cart/types";
 
 const PizzaBlock: React.FC<Pizza> = ({
   id,

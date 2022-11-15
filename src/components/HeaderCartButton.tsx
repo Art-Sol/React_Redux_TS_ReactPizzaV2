@@ -2,10 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { CartPizzaItem, cartSelector } from "../redux/slices/cartSlice";
+import { cartSelector } from "../redux/cart/selectors";
+import { CartPizzaItem } from "../redux/cart/types";
 
 const HeaderCartButton: React.FC = () => {
   const { items, totalPrice } = useSelector(cartSelector);
+  let isMounted = React.useRef(false);
+
+  React.useEffect(() => {
+    if (isMounted.current) {
+      const json = JSON.stringify(items);
+      localStorage.setItem("cartItems", json);
+    }
+    isMounted.current = true;
+  }, [items]);
 
   const totalItemsCount = items.reduce(
     (sum: number, item: CartPizzaItem) => (item.count ? sum + item.count : sum),
@@ -28,7 +38,7 @@ export default HeaderCartButton;
 
 //  Svg icons:
 
-const SvgCartIcon: React.FC = () => {
+const SvgCartIcon: React.FC = React.memo(() => {
   return (
     <svg
       width="18"
@@ -60,4 +70,4 @@ const SvgCartIcon: React.FC = () => {
       />
     </svg>
   );
-};
+});

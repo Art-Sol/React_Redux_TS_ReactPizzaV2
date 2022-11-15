@@ -2,8 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-// types and interfaces
-import { Pizza } from "../redux/slices/pizzasSlice";
+import { Pizza } from "../redux/pizzas/types";
 
 const Product: React.FC = () => {
   const [currentPizza, setCurrentPizza] = React.useState<Pizza>();
