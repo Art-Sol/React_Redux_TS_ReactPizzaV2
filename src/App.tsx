@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import MainLayout from "./Layouts/MainLayout";
 import Main from "./pages/Main";
+import { LoadingPage } from "./components";
 
 import "./scss/app.scss";
 
@@ -24,7 +25,7 @@ function App() {
         <Route
           path="cart"
           element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingPage />}>
               <Cart />
             </Suspense>
           }
@@ -32,7 +33,7 @@ function App() {
         <Route
           path="pizza/:id"
           element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingPage />}>
               <Product />
             </Suspense>
           }
@@ -40,7 +41,7 @@ function App() {
         <Route
           path="*"
           element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingPage />}>
               <NotFound />
             </Suspense>
           }

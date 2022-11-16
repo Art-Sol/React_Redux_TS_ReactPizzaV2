@@ -7,15 +7,6 @@ import { CartPizzaItem } from "../redux/cart/types";
 
 export const HeaderCartButton: React.FC = () => {
   const { items, totalPrice } = useSelector(cartSelector);
-  let isMounted = React.useRef(false);
-
-  React.useEffect(() => {
-    if (isMounted.current) {
-      const json = JSON.stringify(items);
-      localStorage.setItem("cartItems", json);
-    }
-    isMounted.current = true;
-  }, [items]);
 
   const totalItemsCount = items.reduce(
     (sum: number, item: CartPizzaItem) => (item.count ? sum + item.count : sum),

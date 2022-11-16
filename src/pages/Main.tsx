@@ -9,19 +9,19 @@ import { fetchPizzas } from "../redux/pizzas/asyncActions";
 import { filterSelector } from "../redux/filter/selectors";
 import { pizzaSelector } from "../redux/pizzas/selectors";
 
-import { sortTypes } from "../components";
+import { IFilterSliceState } from "../redux/filter/types";
+import { Pizza } from "../redux/pizzas/types";
 
 import {
   Categories,
   Sort,
-  PizzaBlock,
   Skeleton,
   ErrorRequest,
   Pagination,
+  sortTypes,
+  withLayout,
+  PizzaBlockForMainPage,
 } from "../components";
-
-import { IFilterSliceState } from "../redux/filter/types";
-import { Pizza } from "../redux/pizzas/types";
 
 type GetPizzasArgs = {
   activeCategoryIndex: number;
@@ -133,6 +133,8 @@ const Main: React.FC = () => {
   };
 
   function renderPizzaBlockList(arrayPizzas: Pizza[], limit: number) {
+    const PizzaBlockWithMainPageLayout = withLayout(PizzaBlockForMainPage); // using Higher-Order Component (HOC)
+
     if (status === "loading") {
       return [...new Array(limit)].map((_, i) => <Skeleton key={i} />);
     }
@@ -142,7 +144,7 @@ const Main: React.FC = () => {
     }
 
     return arrayPizzas.map((pizza: Pizza) => (
-      <PizzaBlock key={pizza.id} {...pizza} />
+      <PizzaBlockWithMainPageLayout key={pizza.id} {...pizza} />
     ));
   }
 

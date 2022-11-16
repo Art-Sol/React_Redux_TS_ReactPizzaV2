@@ -30,41 +30,45 @@ export const CartItem: React.FC<CartPizzaItem> = (currentItem) => {
 
   return (
     <div className="cart__item">
-      <div className="cart__item-img">
-        <img className="pizza-block__image" src={imageUrl} alt={title} />
+      <div className="cart__item--top">
+        <div className="cart__item-img">
+          <img className="pizza-block__image" src={imageUrl} alt={title} />
+        </div>
+        <div className="cart__item-info">
+          <h3>{title}</h3>
+          <p>
+            {type} тесто, {size} см.
+          </p>
+        </div>
       </div>
-      <div className="cart__item-info">
-        <h3>{title}</h3>
-        <p>
-          {type} тесто, {size} см.
-        </p>
-      </div>
-      <div className="cart__item-count">
-        <button
-          disabled={count === 1}
-          onClick={handleMinusPizza}
-          className="button button--outline button--circle cart__item-count-minus"
-        >
-          <SvgMinusIcon />
-        </button>
-        <b>{count}</b>
-        <button
-          onClick={handlePlusPizza}
-          className="button button--outline button--circle cart__item-count-plus"
-        >
-          <SvgPlusIcon />
-        </button>
-      </div>
-      <div className="cart__item-price">
-        <b>{count ? price * count : price}</b>
-      </div>
-      <div className="cart__item-remove">
-        <button
-          onClick={handleDeletePizza}
-          className="button button--outline button--circle"
-        >
-          <SvgDeleteIcon />
-        </button>
+      <div className="cart__item--bot">
+        <div className="cart__item-count">
+          <button
+            disabled={count === 1}
+            onClick={handleMinusPizza}
+            className="button button--outline button--circle cart__item-count-minus"
+          >
+            <SvgMinusIcon />
+          </button>
+          <b>{count}</b>
+          <button
+            onClick={handlePlusPizza}
+            className="button button--outline button--circle cart__item-count-plus"
+          >
+            <SvgPlusIcon />
+          </button>
+        </div>
+        <div className="cart__item-price">
+          <b>{count ? price * count : price}</b>
+        </div>
+        <div className="cart__item-remove">
+          <button
+            onClick={handleDeletePizza}
+            className="button button--outline button--circle"
+          >
+            <SvgDeleteIcon />
+          </button>
+        </div>
       </div>
     </div>
   );

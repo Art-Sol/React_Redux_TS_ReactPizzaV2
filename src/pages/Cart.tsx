@@ -13,12 +13,22 @@ const Cart: React.FC = () => {
   const { items, totalPrice } = useSelector(cartSelector);
   const dispatch = useDispatch();
 
+  const pizzasList = renderPizzaList(items);
+
+  let isMounted = React.useRef(false);
+
+  React.useEffect(() => {
+    if (isMounted.current) {
+      const json = JSON.stringify(items);
+      localStorage.setItem("cartItems", json);
+    }
+    isMounted.current = true;
+  }, [items]);
+
   const totalItemsCount = items.reduce(
     (sum: number, item: CartPizzaItem) => (item.count ? sum + item.count : sum),
     0
   );
-
-  const pizzasList = renderPizzaList(items);
 
   const handleClearCart = () => {
     if (window.confirm("Удалить все товары из корзины?")) {

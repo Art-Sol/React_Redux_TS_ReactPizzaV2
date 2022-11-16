@@ -1,0 +1,116 @@
+@import "../variables";
+
+.product-pizza {
+  margin: 30px 0px;
+  display: flex;
+  gap: 40px;
+  @media (max-width: 850px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__description {
+    margin-bottom: 30px;
+    font-size: 20px;
+  }
+
+  &__title {
+    margin-bottom: 30px;
+  }
+
+  &__image {
+    img {
+      max-height: 381px;
+      @media (max-width: 1075px) {
+        max-height: 250px;
+      }
+    }
+  }
+
+  &__properties {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0px;
+  }
+
+  &__selector {
+    display: flex;
+    align-items: center;
+    @media (max-width: 850px) {
+      justify-content: center;
+    }
+    @media (max-width: 460px) {
+      flex-direction: column;
+    }
+
+    &:first-child {
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin-right: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      @media (max-width: 1075px) {
+        font-size: 16px;
+      }
+      @media (max-width: 460px) {
+        margin-right: 0px;
+        margin-bottom: 10px;
+      }
+    }
+
+    ul {
+      display: flex;
+      gap: 10px;
+
+      li {
+        padding: 10px;
+        flex: 1;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 20px;
+        border: 1px solid $orange;
+        border-radius: 15px;
+        @include noselect();
+        &.active {
+          background: $orange;
+          border-radius: 15px;
+          color: #fff;
+          cursor: auto;
+        }
+        @media (max-width: 1075px) {
+          padding: 6px;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  &__price {
+    font-size: 32px;
+    font-weight: bold;
+  }
+
+  &__bot {
+    margin-top: 30px;
+    display: flex;
+    @media (max-width: 850px) {
+      justify-content: center;
+    }
+    @media (max-width: 460px) {
+      flex-direction: column;
+    }
+    h4 {
+      margin-right: 30px;
+      @media (max-width: 460px) {
+        margin-right: 0px;
+        margin-bottom: 10px;
+      }
+    }
+    button {
+      margin: 0px 30px;
+    }
+  }
+}

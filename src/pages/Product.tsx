@@ -4,10 +4,18 @@ import axios from "axios";
 
 import { Pizza } from "../redux/pizzas/types";
 
+import {
+  withLayout,
+  PizzaBlockForProductPage,
+  SkeletonProduct,
+} from "../components";
+
 const Product: React.FC = () => {
   const [currentPizza, setCurrentPizza] = React.useState<Pizza>();
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const PizzaBlockWithProductPageLayout = withLayout(PizzaBlockForProductPage); // using Higher-Order Component (HOC)
 
   React.useEffect(() => {
     fetchCurrentPizza(id); // eslint-disable-next-line
@@ -30,24 +38,16 @@ const Product: React.FC = () => {
   };
 
   if (!currentPizza) {
-    return <>Загрузка...</>;
+    return (
+      <div className="container">
+        <div className="product-pizza">
+          <SkeletonProduct />
+        </div>
+      </div>
+    );
   }
 
-  const { imageUrl, price, title } = currentPizza;
-
-  return (
-    <div className="container">
-      <img src={imageUrl} alt="" />
-      <h2>{title}</h2>
-      <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus maiores
-        saepe nobis optio deserunt iure voluptatum, eveniet dolorum, ea, tempora
-        voluptate porro facere labore vitae tempore. Eligendi corporis maiores
-        consequuntur!
-      </p>
-      <h4>{price} ₽</h4>
-    </div>
-  );
+  return <PizzaBlockWithProductPageLayout {...currentPizza} />;
 };
 
 export default Product;

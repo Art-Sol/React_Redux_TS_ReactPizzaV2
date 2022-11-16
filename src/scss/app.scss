@@ -71,13 +71,18 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    @media (max-width: 480px) {
+      justify-content: center;
+    }
   }
 
   .content__title {
     display: flex;
     align-items: center;
     font-size: 32px;
-
+    @media (max-width: 480px) {
+      display: none;
+    }
     svg {
       position: relative;
       top: -2px;
@@ -128,12 +133,43 @@ body {
     border-top: 1px solid $gray-line;
     padding-top: 30px;
     margin-top: 30px;
+    justify-content: space-between;
+    @media (max-width: 800px) {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &--top {
+      display: flex;
+      justify-content: left;
+      width: 40%;
+      @media (max-width: 800px) {
+        margin-bottom: 30px;
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    &--bot {
+      display: flex;
+      justify-content: space-between;
+      width: 50%;
+      @media (max-width: 800px) {
+        width: 100%;
+        justify-content: center;
+      }
+    }
 
     &-img {
       display: flex;
       align-items: center;
-      margin-right: 15px;
-      width: 10%;
+      margin-right: 10px;
+      width: 25%;
+
+      @media (max-width: 800px) {
+        justify-content: flex-end;
+        width: 40%;
+      }
 
       img {
         width: 80px;
@@ -145,13 +181,19 @@ body {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      width: 40%;
+      margin-left: 10px;
+      // width: 40%;
+      @media (max-width: 800px) {
+        justify-content: flex-start;
+        width: 60%;
+      }
 
       h3 {
         font-weight: bold;
         font-size: 22px;
         line-height: 27px;
         letter-spacing: 0.01em;
+        max-width: 250px;
       }
 
       p {
@@ -164,7 +206,6 @@ body {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 13%;
 
       &-minus {
         svg {
@@ -190,6 +231,7 @@ body {
 
       b {
         font-size: 22px;
+        margin: 0px 10px;
       }
     }
 
@@ -197,7 +239,11 @@ body {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 33%;
+      // width: 33%;
+
+      @media (max-width: 800px) {
+        margin: 0 30px;
+      }
 
       b {
         font-weight: bold;
@@ -210,7 +256,11 @@ body {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      width: 4%;
+      // width: 4%;
+
+      @media (max-width: 800px) {
+        margin: 0 10px;
+      }
 
       .button {
         border-color: #fe5f1e;
@@ -246,6 +296,12 @@ body {
       display: flex;
       justify-content: space-between;
 
+      @media (max-width: 560px) {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
       span {
         font-size: 22px;
 
@@ -261,6 +317,12 @@ body {
       display: flex;
       justify-content: space-between;
       margin-top: 40px;
+
+      @media (max-width: 560px) {
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 25px;
+      }
 
       .go-back-btn {
         display: flex;

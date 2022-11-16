@@ -4,7 +4,7 @@ import ContentLoader from "react-content-loader";
 export const Skeleton: React.FC = () => (
   <ContentLoader
     className="pizza-block"
-    speed={2}
+    speed={3}
     width={280}
     height={466}
     viewBox="0 0 280 466"

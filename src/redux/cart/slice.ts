@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import _ from "lodash";
 
-import { getCartFromLocStor } from "../../utils/getCartFromLS";
+import { getCartFromLocStore } from "../../utils/getCartFromLS";
 import { calcTotalPrice } from "../../utils/calcTotalPrice";
 
 import { ICartSliceState, CartPizzaItem } from "./types";
 
-const { items, totalPrice } = getCartFromLocStor();
+const { items, totalPrice } = getCartFromLocStore();
 
 const initialState: ICartSliceState = {
   items,
@@ -50,9 +50,7 @@ const cartSlice = createSlice({
         const index = state.items.indexOf(findItem);
         const reducedItem = state.items[index];
 
-        if (reducedItem.count) {
-          reducedItem.count--;
-        }
+        if (reducedItem.count) reducedItem.count--;
       }
 
       state.totalPrice = calcTotalPrice(state.items);
